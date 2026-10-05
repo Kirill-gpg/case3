@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Экспертная система входного контроля</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+    <h1>Экспертная система входного контроля</h1>
+    <form action="/check" method="post">
+        <label>Напряжение питания, В</label>
+        <input type="number" step="0.1" name="voltage" value="{{ params.voltage if params else '5.0' }}" required>
+
+        <label>Температура хранения, °C</label>
+        <input type="number" step="1" name="temperature" value="{{ params.temperature if params else '25' }}" required>
+
+        <label>Сопротивление, Ом</label>
+        <input type="number" step="1" name="resistance" value="{{ params.resistance if params else '1000' }}" required>
+
+        <button type="submit">Проверить</button>
+    </form>
+
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
+
+    {% if result %}
+    <div class="result {{ 'brak' if result.status == 'Брак' else 'good' if result.status == 'Годен' else 'warning' }}">
+        <strong>Заключение:</strong> {{ result.status }}<br>
+        <em>{{ result.reason }}</em>
+    </div>
+    {% endif %}
+</div>
+</body>
+</html>
